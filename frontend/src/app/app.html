@@ -1,0 +1,15 @@
+<div class="app-container">
+  <header class="app-header">
+    <h1>{{ title() }}</h1>
+    <nav>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+      <a routerLink="/models" routerLinkActive="active">Models</a>
+      <a [routerLink]="modelService.selectedModel() ? '/chat' : null" routerLinkActive="active"
+        [class.disabled]="!modelService.selectedModel()">Chat</a>
+    </nav>
+  </header>
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>

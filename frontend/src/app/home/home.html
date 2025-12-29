@@ -1,0 +1,14 @@
+<div class="home-container">
+    <h2>Welcome to Glorzo</h2>
+
+    <div *ngIf="apiData() as data" class="api-debug">
+        <h3>Backend Connection Test</h3>
+        <p><strong>Status:</strong> {{ data.status }}</p>
+        <p><strong>Item ID:</strong> {{ data.data.id }}</p>
+        <p><strong>Shared Msg:</strong> {{ data.sharedMessage.message }}</p>
+    </div>
+
+    <div *ngIf="!apiData()">
+        <p>Connecting to backend...</p>
+    </div>
+</div>

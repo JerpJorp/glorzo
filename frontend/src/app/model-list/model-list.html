@@ -1,0 +1,49 @@
+<div class="model-list-container">
+    <h2>Available Models</h2>
+
+    <div class="actions">
+        <button class="btn-primary" (click)="fetchModels()" [disabled]="loading()">
+            {{ loading() ? 'Loading Models...' : 'Retrieve Models' }}
+        </button>
+
+        <div class="filters" *ngIf="models().length > 0">
+            <div class="search-box">
+                <input type="text" placeholder="Search models..." [ngModel]="searchTerm()"
+                    (ngModelChange)="searchTerm.set($event)" class="search-input">
+            </div>
+
+            <div class="price-filter">
+                <label>Max Input: ${{ maxPriceFilter() | number:'1.2-2' }}/1M</label>
+                <input type="range" min="0" [max]="overallMaxPrice()" step="0.5" [ngModel]="maxPriceFilter()"
+                    (ngModelChange)="maxPriceFilter.set($event)" class="range-input">
+            </div>
+        </div>
+    </div>
+
+    <!-- Selection Status -->
+    <div *ngIf="selectedModel()" class="selection-status">
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <span>Selected: <strong>{{ selectedModel().name }}</strong></span>
+            <a routerLink="/chat" class="btn-sm">Start Chatting →</a>
+        </div>
+    </div>
+
+    <div *ngIf="models().length > 0; else noModels" class="models-grid">
+        <div *ngFor="let model of filteredModels()" class="model-card"
+            [ngClass]="{'selected': selectedModel()?.id === model.id}" (click)="selectModel(model)">
+            <div class="model-header">
+                <h3>{{ model.name }}</h3>
+                <span class="badge">{{ model.id }}</span>
+            </div>
+            <p *ngIf="model.description" class="model-desc">{{ model.description }}</p>
+            <div class="model-details">
+                <span title="Context Length">📏 {{ model.context_length }}</span>
+                <span title="Pricing per 1M tokens">💰 ${{ getCostPerMillion(model.pricing.prompt) }} / ${{
+                    getCostPerMillion(model.pricing.completion) }}</span>
+            </div>
+        </div>
+    </div>
+    <ng-template #noModels>
+        <p *ngIf="!loading()" class="empty-state">Click the button to load available models.</p>
+    </ng-template>
+</div>

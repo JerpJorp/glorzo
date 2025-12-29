@@ -1,0 +1,216 @@
+:host {
+    display: block;
+    color: #e0e0e0;
+    font-family: 'Inter', sans-serif;
+}
+
+.model-list-container {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h2 {
+    font-size: 2rem;
+    background: linear-gradient(90deg, #ff8a00, #e52e71);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 24px;
+}
+
+.actions {
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-sm {
+    background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-block;
+    transition: transform 0.2s;
+    box-shadow: 0 2px 10px rgba(150, 201, 61, 0.3);
+}
+
+.btn-sm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(150, 201, 61, 0.5);
+}
+
+.filters {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.search-box {
+    flex-grow: 1;
+    max-width: 300px;
+    min-width: 200px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #764ba2;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.price-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #ccc;
+    font-size: 0.9rem;
+    min-width: 200px;
+}
+
+.range-input {
+    width: 100%;
+    cursor: pointer;
+    accent-color: #764ba2;
+}
+
+.selection-status {
+    background: rgba(100, 255, 218, 0.1);
+    color: #64ffda;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(100, 255, 218, 0.2);
+    display: flex;
+    align-items: center;
+}
+
+.models-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.model-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 24px;
+    transition: transform 0.3s, background 0.3s, border-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.model-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.model-card.selected {
+    border-color: #764ba2;
+    background: rgba(118, 75, 162, 0.15);
+    box-shadow: 0 0 20px rgba(118, 75, 162, 0.3);
+}
+
+.model-card.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #764ba2;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.model-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.model-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #fff;
+    word-break: break-word;
+}
+
+.badge {
+    font-size: 0.75rem;
+    background: rgba(100, 255, 218, 0.1);
+    color: #64ffda;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    margin-left: 8px;
+}
+
+.model-desc {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    line-height: 1.5;
+}
+
+.model-details {
+    display: flex;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: #888;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 12px;
+}
+
+.empty-state {
+    font-style: italic;
+    color: #666;
+}

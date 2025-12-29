@@ -1,0 +1,76 @@
+<div class="chat-container">
+    <div *ngIf="!selectedModel()" class="no-model-state">
+        <h2>No Model Selected</h2>
+        <p>Please select a model from the list to start chatting.</p>
+        <a routerLink="/models" class="btn-primary">Browse Models</a>
+    </div>
+
+    <div *ngIf="selectedModel()" class="chat-interface">
+        <div class="chat-header">
+            <div class="header-left">
+                <div class="model-info">
+                    <h3>{{ selectedModel().name }}</h3>
+                    <span class="badge">{{ selectedModel().id }}</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn-icon" (click)="showSettings.set(!showSettings())" title="Settings">
+                    ⚙️
+                </button>
+                <button class="btn-icon danger" (click)="clearChat()" title="Clear Chat">
+                    🗑️
+                </button>
+                <a routerLink="/models" class="change-model-link">Change Model</a>
+            </div>
+        </div>
+
+        <div class="settings-panel" *ngIf="showSettings()">
+            <div class="setting-item">
+                <label>Temperature: {{ temperature() }}</label>
+                <input type="range" min="0" max="2" step="0.1" [ngModel]="temperature()"
+                    (ngModelChange)="temperature.set($event)">
+            </div>
+            <div class="setting-item">
+                <label>Max Tokens: {{ maxTokens() }}</label>
+                <input type="range" min="100" max="8192" step="100" [ngModel]="maxTokens()"
+                    (ngModelChange)="maxTokens.set($event)">
+            </div>
+            <div class="setting-item">
+                <label>Top P: {{ topP() }}</label>
+                <input type="range" min="0" max="1" step="0.05" [ngModel]="topP()" (ngModelChange)="topP.set($event)">
+            </div>
+            <div class="setting-item">
+                <label>Freq Penalty: {{ frequencyPenalty() }}</label>
+                <input type="range" min="-2" max="2" step="0.1" [ngModel]="frequencyPenalty()"
+                    (ngModelChange)="frequencyPenalty.set($event)">
+            </div>
+            <div class="setting-item">
+                <label>Pres Penalty: {{ presencePenalty() }}</label>
+                <input type="range" min="-2" max="2" step="0.1" [ngModel]="presencePenalty()"
+                    (ngModelChange)="presencePenalty.set($event)">
+            </div>
+        </div>
+
+        <div class="messages-area" #scrollContainer>
+            <div *ngFor="let msg of messages()" class="message-bubble"
+                [ngClass]="{'user-msg': msg.role === 'user', 'ai-msg': msg.role === 'assistant'}">
+                <div class="bubble-content" [innerHTML]="msg.content"></div>
+            </div>
+
+            <div *ngIf="isLoading()" class="loading-indicator">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <textarea [ngModel]="currentInput()" (ngModelChange)="currentInput.set($event)"
+                (keydown.enter)="$event.preventDefault(); sendMessage()" placeholder="Type your message here..."
+                [disabled]="isLoading()"></textarea>
+            <button class="send-btn" (click)="sendMessage()" [disabled]="!currentInput().trim() || isLoading()">
+                Send
+            </button>
+        </div>
+    </div>
+</div>
