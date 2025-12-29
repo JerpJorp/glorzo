@@ -40,16 +40,15 @@ export class Chat implements AfterViewChecked {
 
   private async loadChat() {
     try {
-      const storedMessages = await this.chatStorage.loadMessages();
-      if (storedMessages && storedMessages.length > 0) {
-        this.messages.set(storedMessages);
+      const chatData = await this.chatStorage.loadChat();
+      if (chatData && chatData.messages.length > 0) {
+        this.messages.set(chatData.messages);
+        this.systemPrompt.set(chatData.systemPrompt || '');
       } else if (this.selectedModel()) {
         // Only show welcome message if no history exists
         const welcome = [{ role: 'assistant', content: `Hello! I'm ready to chat using **${this.selectedModel().name}**. How can I help you today?` } as Message];
         this.messages.set(welcome);
-        // We don't necessarily save the welcome message immediately, or we can. 
-        // Let's safe it to be consistent with "current state"
-        this.chatStorage.saveMessages(welcome);
+        this.saveChatState();
       }
     } catch (err) {
       console.error('Error loading chat from DB:', err);
@@ -74,10 +73,26 @@ export class Chat implements AfterViewChecked {
     if (this.selectedModel()) {
       const welcome = [{ role: 'assistant', content: `Hello! I'm ready to chat using **${this.selectedModel().name}**. How can I help you today?` } as Message];
       this.messages.set(welcome);
-      this.chatStorage.saveMessages(welcome);
+      this.systemPrompt.set('');
+      this.saveChatState();
     } else {
       this.messages.set([]);
+      this.systemPrompt.set('');
     }
+  }
+
+  // Create a helper to save state consistently
+  private saveChatState() {
+    this.chatStorage.saveChat({
+      messages: this.messages(),
+      systemPrompt: this.systemPrompt()
+    });
+  }
+
+  // Save on system prompt change
+  updateSystemPrompt(prompt: string) {
+    this.systemPrompt.set(prompt);
+    this.saveChatState();
   }
 
   sendMessage() {
@@ -89,9 +104,10 @@ export class Chat implements AfterViewChecked {
     // Add user message
     this.messages.update(msgs => {
       const newMsgs = [...msgs, { role: 'user', content: input } as Message];
-      this.chatStorage.saveMessages(newMsgs);
       return newMsgs;
     });
+    this.saveChatState(); // Save after update
+
     this.currentInput.set('');
     this.isLoading.set(true);
 
@@ -119,18 +135,18 @@ export class Chat implements AfterViewChecked {
         const reply = response.choices?.[0]?.message?.content || 'No response received.';
         this.messages.update(msgs => {
           const newMsgs = [...msgs, { role: 'assistant', content: reply } as Message];
-          this.chatStorage.saveMessages(newMsgs);
           return newMsgs;
         });
+        this.saveChatState();
         this.isLoading.set(false);
       },
       error: (err) => {
         console.error(err);
         this.messages.update(msgs => {
           const newMsgs = [...msgs, { role: 'assistant', content: 'Error: Could not connect to the model.' } as Message];
-          this.chatStorage.saveMessages(newMsgs);
           return newMsgs;
         });
+        this.saveChatState();
         this.isLoading.set(false);
       }
     });

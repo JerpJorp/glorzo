@@ -31,7 +31,7 @@
                     <span class="tooltip-icon"
                         title="A system prompt sets the behavior/personality of the AI. Example: 'You are a helpful coding assistant.'">ⓘ</span>
                 </label>
-                <textarea [ngModel]="systemPrompt()" (ngModelChange)="systemPrompt.set($event)"
+                <textarea [ngModel]="systemPrompt()" (ngModelChange)="updateSystemPrompt($event)"
                     placeholder="Enter a system prompt..." class="system-prompt-input"></textarea>
             </div>
             <div class="setting-item">

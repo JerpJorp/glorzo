@@ -5,6 +5,11 @@ export interface Message {
     content: string;
 }
 
+export interface ChatData {
+    messages: Message[];
+    systemPrompt: string;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -40,19 +45,24 @@ export class ChatStorageService {
         });
     }
 
-    async saveMessages(messages: Message[]): Promise<void> {
+    async saveChat(data: ChatData): Promise<void> {
         const db = await this.dbPromise;
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([this.STORE_NAME], 'readwrite');
             const store = transaction.objectStore(this.STORE_NAME);
-            const request = store.put(messages, this.CHAT_KEY);
+            const request = store.put(data, this.CHAT_KEY);
 
             request.onsuccess = () => resolve();
             request.onerror = (e) => reject(e);
         });
     }
 
-    async loadMessages(): Promise<Message[] | null> {
+    // Deprecated: use saveChat instead
+    async saveMessages(messages: Message[]): Promise<void> {
+        return this.saveChat({ messages, systemPrompt: '' });
+    }
+
+    async loadChat(): Promise<ChatData | null> {
         const db = await this.dbPromise;
         return new Promise((resolve, reject) => {
             const transaction = db.transaction([this.STORE_NAME], 'readonly');
@@ -60,10 +70,27 @@ export class ChatStorageService {
             const request = store.get(this.CHAT_KEY);
 
             request.onsuccess = (event: any) => {
-                resolve(event.target.result || null);
+                const result = event.target.result;
+                if (!result) {
+                    resolve(null);
+                    return;
+                }
+
+                // Backward compatibility: check if result is array (old format) or object (new format)
+                if (Array.isArray(result)) {
+                    resolve({ messages: result, systemPrompt: '' });
+                } else {
+                    resolve(result);
+                }
             };
             request.onerror = (e) => reject(e);
         });
+    }
+
+    // Deprecated wrapper
+    async loadMessages(): Promise<Message[] | null> {
+        const data = await this.loadChat();
+        return data ? data.messages : null;
     }
 
     async clearChat(): Promise<void> {
