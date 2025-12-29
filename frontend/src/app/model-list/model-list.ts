@@ -1,14 +1,14 @@
 import { Component, inject, signal, computed } from '@angular/core';
 import { ApiService } from '../api.service';
 import { ModelService } from '../model';
-import { NgFor, NgIf, JsonPipe, NgClass, DecimalPipe } from '@angular/common';
+import { NgFor, NgIf, NgClass, DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OpenRouterModel } from '@glorzo/shared';
 
 @Component({
   selector: 'app-model-list',
-  imports: [NgFor, NgIf, JsonPipe, FormsModule, NgClass, RouterLink, DecimalPipe],
+  imports: [NgFor, NgIf, FormsModule, NgClass, RouterLink, DecimalPipe],
   templateUrl: './model-list.html',
   styleUrl: './model-list.css',
 })
