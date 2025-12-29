@@ -30,6 +30,7 @@ export class Chat implements AfterViewChecked {
   protected topP = signal(1);
   protected frequencyPenalty = signal(0);
   protected presencePenalty = signal(0);
+  protected systemPrompt = signal('');
 
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
@@ -95,7 +96,15 @@ export class Chat implements AfterViewChecked {
     this.isLoading.set(true);
 
     // Prepare messages for API
-    const apiMessages = this.messages().map(m => ({ role: m.role, content: m.content }));
+    let apiMessages = this.messages().map(m => ({ role: m.role, content: m.content }));
+
+    // Add system prompt if present
+    if (this.systemPrompt().trim()) {
+      apiMessages = [
+        { role: 'system', content: this.systemPrompt().trim() },
+        ...apiMessages
+      ];
+    }
 
     const options = {
       temperature: this.temperature(),

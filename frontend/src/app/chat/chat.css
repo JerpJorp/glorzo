@@ -119,6 +119,40 @@
     border-radius: 2px;
 }
 
+.setting-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.system-prompt-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    padding: 8px;
+    resize: none;
+    height: 80px;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.system-prompt-input:focus {
+    outline: none;
+    border-color: #64ffda;
+}
+
+.tooltip-icon {
+    cursor: help;
+    font-size: 1rem;
+    color: #64ffda;
+    margin-left: 5px;
+    opacity: 0.8;
+}
+
+.tooltip-icon:hover {
+    opacity: 1;
+}
+
 .model-info h3 {
     margin: 0;
     color: #fff;
